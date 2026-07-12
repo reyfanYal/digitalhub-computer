@@ -126,8 +126,11 @@ const initDashboard = (currentUser) => {
                 actionBtn.textContent = 'Stok Habis';
                 actionBtn.disabled = true;
             } else {
-                actionBtn.textContent = 'Tambah Keranjang';
-                actionBtn.addEventListener('click', () => addToCart(product, currentUser.id));
+                // REVISI: Ubah teks & fungsikan untuk pindah ke halaman Detail
+                actionBtn.textContent = 'Lihat Detail';
+                actionBtn.addEventListener('click', () => {
+                    window.location.href = `product-detail.html?id=${product.id}`;
+                });
             }
 
             btnWrapper.appendChild(actionBtn);

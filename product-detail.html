@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Detail Produk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/detail.css">
+</head>
+
+<body class="dashboard-layout">
+
+    <!-- Navigasi Responsif Area User -->
+    <nav class="dashboard-nav">
+        <a href="dashboard.html" class="nav-brand">DigitalHub.</a>
+        <button class="hamburger-toggle" id="menuToggleBtn" aria-label="Buka Menu">☰</button>
+        <div class="nav-menu-container" id="navMenuContainer">
+            <span class="greeting-text" id="userGreeting">Halo, User</span>
+            <ul class="nav-list">
+                <li><a href="dashboard.html" class="nav-link">Home</a></li>
+                <li><a href="riwayat.html" class="nav-link">Riwayat Pesanan</a></li>
+                <li>
+                    <a href="cart.html" class="cart-btn" aria-label="Keranjang Belanja">
+                        🛒
+                        <span class="cart-badge" id="cartBadgeCount">0</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="filter-btn logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="dashboard-container" style="margin-top: 24px;">
+        <!-- Breadcrumb Navigasi -->
+        <div class="breadcrumb" id="breadcrumbNav">
+            <a href="dashboard.html">Home</a> / <span id="breadCategory">Kategori</span> / <span id="breadName"
+                class="active-crumb">Nama Produk</span>
+        </div>
+
+        <!-- Layout Utama: Gambar & Info Pembelian -->
+        <div class="detail-layout">
+            <!-- Kolom Kiri: Gambar Utama -->
+            <div class="detail-image-card">
+                <img src="" alt="Product Image" id="detailImage">
+            </div>
+
+            <!-- Kolom Kanan: Info & Action -->
+            <div class="detail-action-card">
+                <h1 id="detailTitle" class="detail-title">Loading...</h1>
+                <div class="detail-brand" id="detailBrand">Brand</div>
+                <div class="detail-price" id="detailPrice">Rp 0</div>
+
+                <hr class="divider">
+
+                <div class="action-box">
+                    <h3 style="font-size: 1rem; margin-bottom: 12px; color: #14213D;">Atur jumlah pembelian</h3>
+                    <div class="quantity-controller">
+                        <button class="qty-btn" id="btnDecrease">-</button>
+                        <input type="number" id="inputQty" value="1" min="1" readonly>
+                        <button class="qty-btn" id="btnIncrease">+</button>
+                        <span class="stock-info">Stok: Sisa <span id="detailStock">0</span></span>
+                    </div>
+
+                    <div class="subtotal-display">
+                        <span>Subtotal:</span>
+                        <span id="detailSubtotal" style="font-weight: 800; color: #14213D;">Rp 0</span>
+                    </div>
+
+                    <button class="btn-checkout-action" id="btnAddToCart">+ Keranjang</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Tab: Deskripsi & Ulasan -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-target="tab-desc">Detail Produk</button>
+                <button class="tab-btn" data-target="tab-reviews">Ulasan (<span id="reviewCount">0</span>)</button>
+            </div>
+
+            <!-- Konten Deskripsi -->
+            <div class="tab-content active" id="tab-desc">
+                <p id="detailDescription" style="line-height: 1.6; color: #1d1d1f;"></p>
+            </div>
+
+            <!-- Konten Ulasan -->
+            <div class="tab-content" id="tab-reviews">
+                <div class="write-review-box">
+                    <h4>Beri Ulasan Produk Ini</h4>
+                    <textarea id="reviewText" placeholder="Bagaimana kualitas produk ini? Ceritakan pengalamanmu..."
+                        class="review-input"></textarea>
+                    <button class="btn btn-secondary" id="btnSubmitReview" style="margin-top: 12px;">Kirim
+                        Ulasan</button>
+                </div>
+
+                <div id="reviewsList" class="reviews-list">
+                    <!-- Ulasan akan dirender disini via JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/js/detail.js"></script>
+</body>
+
+</html>
