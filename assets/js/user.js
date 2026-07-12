@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return; // Hentikan eksekusi script selanjutnya
     }
 
+    // 2. NAVIGASI: Logika Hamburger Menu
+    setupHamburgerMenu();
+
     // Identifikasi halaman aktif berdasarkan keberadaan elemen DOM
     const isDashboard = document.getElementById('productGrid') !== null;
     const isCart = document.getElementById('cartContainer') !== null;
@@ -62,25 +65,33 @@ const updateCartBadge = (userId) => {
     badge.textContent = totalItems;
 };
 
+const setupHamburgerMenu = () => {
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const navMenuContainer = document.getElementById('navMenuContainer');
+    if (menuToggleBtn && navMenuContainer) {
+        menuToggleBtn.addEventListener('click', () => {
+            navMenuContainer.classList.toggle('show');
+        });
+    }
+};
+
 // ==========================================================
-// MODUL DASHBOARD (KATALOG, PENCARIAN, FILTER, ADD TO CART)
+// MODUL DASHBOARD (KATALOG, PENCARIAN, FILTER)
 // ==========================================================
 
 const initDashboard = (currentUser) => {
     // Tampilkan Greeting
     const greetingEl = document.getElementById('userGreeting');
-    if (greetingEl) {
-        greetingEl.textContent = `Halo, ${currentUser.name}`;
-    }
+    if (greetingEl) greetingEl.textContent = `Halo, ${currentUser.name}`;
 
     const productGrid = document.getElementById('productGrid');
     const searchInput = document.getElementById('searchInput');
     const filterBtns = document.querySelectorAll('.filter-btn');
 
-    // Ambil data produk (Jika tidak ada, fallback array kosong)
+    // Ambil data produk
     const products = JSON.parse(localStorage.getItem('products')) || [];
 
-    // Fungsi Render Produk dengan Proteksi XSS (document.createElement)
+    // Fungsi Render Produk dengan Proteksi XSS
     const renderProducts = (dataToRender) => {
         if (!productGrid) return;
         productGrid.textContent = ''; // Kosongkan grid
@@ -122,11 +133,11 @@ const initDashboard = (currentUser) => {
             actionBtn.className = 'add-to-cart-btn';
             actionBtn.style.width = '100%';
 
+            // PERBAIKAN: Tombol menuju Detail Produk, bukan langsung masuk keranjang
             if (product.stock <= 0) {
                 actionBtn.textContent = 'Stok Habis';
                 actionBtn.disabled = true;
             } else {
-                // REVISI: Ubah teks & fungsikan untuk pindah ke halaman Detail
                 actionBtn.textContent = 'Lihat Detail';
                 actionBtn.addEventListener('click', () => {
                     window.location.href = `product-detail.html?id=${product.id}`;
@@ -176,57 +187,12 @@ const initDashboard = (currentUser) => {
         });
     }
 
+    // Render Awal
     renderProducts(products);
 };
 
-const addToCart = (product, userId) => {
-    let carts = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Cek apakah user sudah memasukkan produk ini sebelumnya
-    const existingItemIndex = carts.findIndex(item => item.user_id === userId && item.product_id === product.id);
-
-    // REVISI: Cek ketersediaan stok
-    const currentQtyInCart = existingItemIndex > -1 ? carts[existingItemIndex].quantity : 0;
-
-    if (currentQtyInCart + 1 > product.stock) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Stok Terbatas!',
-            text: `Maaf, Anda tidak dapat menambahkan lebih dari ${product.stock} unit untuk produk ${product.name}.`,
-            confirmButtonColor: '#14213D'
-        });
-        return; // Hentikan eksekusi penambahan ke keranjang
-    }
-
-    if (existingItemIndex > -1) {
-        carts[existingItemIndex].quantity += 1;
-    } else {
-        carts.push({
-            user_id: userId,
-            product_id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            image: product.image
-        });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(carts));
-    updateCartBadge(userId);
-
-    // Notifikasi Toast
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Berhasil ditambahkan ke keranjang',
-        showConfirmButton: false,
-        timer: 1500
-    });
-};
-
 // ==========================================================
-// MODUL KERANJANG BELANJA (CART, REALTIME CALCULATION)
+// MODUL KERANJANG BELANJA (CART, PROMO, REALTIME CALCULATION)
 // ==========================================================
 
 const initCart = (currentUser) => {
@@ -234,6 +200,12 @@ const initCart = (currentUser) => {
     const subtotalEl = document.getElementById('summarySubtotal');
     const grandTotalEl = document.getElementById('summaryGrandTotal');
     const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Elemen Promo
+    const promoInput = document.getElementById('promoCodeInput');
+    const applyPromoBtn = document.getElementById('applyPromoBtn');
+    const discountRow = document.getElementById('discountRow');
+    const discountEl = document.getElementById('summaryDiscount');
 
     if (!cartContainer) return;
 
@@ -247,6 +219,7 @@ const initCart = (currentUser) => {
             cartContainer.innerHTML = '<p style="text-align:center; color: #86868b;">Keranjang Anda masih kosong.</p>';
             if (subtotalEl) subtotalEl.textContent = formatRupiah(0);
             if (grandTotalEl) grandTotalEl.textContent = formatRupiah(0);
+            if (discountRow) discountRow.style.display = 'none';
             return;
         }
 
@@ -284,12 +257,11 @@ const initCart = (currentUser) => {
             qtyInput.addEventListener('change', (e) => {
                 let newQty = parseInt(e.target.value);
 
-                // REVISI: Ambil batas maksimal stok aktual dari database LocalStorage
+                // Ambil batas maksimal stok dari database LocalStorage
                 const allProducts = JSON.parse(localStorage.getItem('products')) || [];
                 const matchedProduct = allProducts.find(p => p.id === item.product_id);
                 const maxStockAvailable = matchedProduct ? matchedProduct.stock : 0;
 
-                // Validasi jika dikosongkan, 0, atau minus
                 if (isNaN(newQty) || newQty <= 0) {
                     Swal.fire({
                         icon: 'warning',
@@ -300,7 +272,6 @@ const initCart = (currentUser) => {
                     newQty = 1;
                     e.target.value = 1;
                 } else if (newQty > maxStockAvailable) {
-                    // Validasi jika melebihi batas stok toko
                     Swal.fire({
                         icon: 'error',
                         title: 'Stok Tidak Mencukupi',
@@ -316,8 +287,6 @@ const initCart = (currentUser) => {
                 if (itemIndex > -1) {
                     carts[itemIndex].quantity = newQty;
                     localStorage.setItem('cart', JSON.stringify(carts));
-
-                    // Rekalkulasi DOM
                     renderCart();
                 }
             });
@@ -355,13 +324,54 @@ const initCart = (currentUser) => {
             cartContainer.appendChild(row);
         });
 
+        // Kalkulasi Diskon Promo
+        let isPromoApplied = localStorage.getItem('activePromo') === 'HUB2026';
+        let finalGrandTotal = totalCartPrice;
+
+        if (isPromoApplied) {
+            const discountAmount = totalCartPrice * 0.10; // Potongan 10%
+            finalGrandTotal = totalCartPrice - discountAmount;
+
+            if (discountRow) {
+                discountRow.style.display = 'flex';
+                discountEl.textContent = `- ${formatRupiah(discountAmount)}`;
+            }
+            if (promoInput) {
+                promoInput.value = 'HUB2026';
+                promoInput.disabled = true;
+                applyPromoBtn.textContent = 'Terpakai';
+                applyPromoBtn.disabled = true;
+                applyPromoBtn.style.backgroundColor = '#2a9d8f';
+            }
+        } else {
+            if (discountRow) discountRow.style.display = 'none';
+        }
+
         // Update Summary DOM
         if (subtotalEl) subtotalEl.textContent = formatRupiah(totalCartPrice);
-        if (grandTotalEl) grandTotalEl.textContent = formatRupiah(totalCartPrice);
+        if (grandTotalEl) grandTotalEl.textContent = formatRupiah(finalGrandTotal);
     };
 
-    // Trigger Render Awal
     renderCart();
+
+    // Event Listener Terapan Promo
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', () => {
+            const code = promoInput.value.trim().toUpperCase();
+            if (code === 'HUB2026') {
+                localStorage.setItem('activePromo', 'HUB2026');
+                renderCart(); // Rekalkulasi harga otomatis
+                Swal.fire({
+                    toast: true, position: 'top-end', icon: 'success',
+                    title: 'Kode Promo Berhasil Diterapkan!', showConfirmButton: false, timer: 2000
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error', title: 'Kode Tidak Valid', text: 'Kode promo salah atau sudah kedaluwarsa.', confirmButtonColor: '#14213D'
+                });
+            }
+        });
+    }
 
     // Validasi dan Navigasi ke Halaman Checkout
     if (checkoutBtn) {

@@ -31,9 +31,21 @@
 
             <div class="cart-summary">
                 <h2 style="margin-bottom: 24px; color: #14213D;">Ringkasan Pesanan</h2>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+                    <input type="text" id="promoCodeInput" placeholder="Kode Promo (HUB2026)"
+                        style="flex: 1; padding: 12px; border: 1px solid #d2d2d7; border-radius: 8px; outline: none; font-family: inherit; font-size: 0.95rem; text-transform: uppercase;">
+                    <button id="applyPromoBtn"
+                        style="padding: 12px 16px; background-color: #14213D; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s;">Terapkan</button>
+                </div>
+
                 <div class="summary-row">
                     <span>Subtotal</span>
                     <span id="summarySubtotal">Rp 0</span>
+                </div>
+                <div class="summary-row" id="discountRow" style="display: none; color: #d90429;">
+                    <span>Diskon (10%)</span>
+                    <span id="summaryDiscount">- Rp 0</span>
                 </div>
                 <div class="summary-row">
                     <span>Pajak & Layanan</span>

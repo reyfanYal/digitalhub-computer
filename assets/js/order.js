@@ -53,12 +53,12 @@ const initCheckoutSystem = (user, formElement) => {
     const itemsListContainer = document.getElementById('checkoutItemsList');
     const subtotalDisplay = document.getElementById('checkoutSubtotal');
     const grandTotalDisplay = document.getElementById('checkoutGrandTotal');
-    let calculatedGrandTotal = 0;
+    let calculatedSubtotal = 0;
 
     // Render Ringkasan Belanja ke Kolom Kanan (Aman dari XSS)
     userCart.forEach(item => {
         const lineTotal = item.price * item.quantity;
-        calculatedGrandTotal += lineTotal;
+        calculatedSubtotal += lineTotal;
 
         const row = document.createElement('div');
         row.className = 'summary-item-row';
@@ -85,27 +85,125 @@ const initCheckoutSystem = (user, formElement) => {
         itemsListContainer.appendChild(row);
     });
 
-    subtotalDisplay.textContent = formatCurrencyIDR(calculatedGrandTotal);
-    grandTotalDisplay.textContent = formatCurrencyIDR(calculatedGrandTotal);
+    // Tarik Diskon Promo Jika Aktif
+    let finalGrandTotal = calculatedSubtotal;
+    const isPromoApplied = localStorage.getItem('activePromo') === 'HUB2026';
 
-    // Handle Form Submission Checkout
+    if (isPromoApplied) {
+        const discountAmount = calculatedSubtotal * 0.10;
+        finalGrandTotal = calculatedSubtotal - discountAmount;
+
+        const discRow = document.getElementById('checkoutDiscountRow');
+        const discAmount = document.getElementById('checkoutDiscountAmount');
+        if (discRow) {
+            discRow.style.display = 'flex';
+            discAmount.textContent = `- ${formatCurrencyIDR(discountAmount)}`;
+        }
+    }
+
+    if (subtotalDisplay) subtotalDisplay.textContent = formatCurrencyIDR(calculatedSubtotal);
+    if (grandTotalDisplay) grandTotalDisplay.textContent = formatCurrencyIDR(finalGrandTotal);
+
+
+    // ==========================================
+    // REVISI: REAL-TIME INLINE VALIDATION
+    // ==========================================
+    const inputName = document.getElementById('receiverName');
+    const errName = document.getElementById('nameError');
+
+    const inputPhone = document.getElementById('receiverPhone');
+    const errPhone = document.getElementById('phoneError');
+
+    const inputAddr = document.getElementById('receiverAddress');
+    const errAddr = document.getElementById('addressError');
+
+    // Fungsi pengatur UI Error
+    const toggleErrorUI = (inputEl, errorEl, hasError, msg) => {
+        if (hasError) {
+            inputEl.classList.add('input-error');
+            errorEl.textContent = msg;
+            errorEl.style.display = 'block';
+        } else {
+            inputEl.classList.remove('input-error');
+            errorEl.style.display = 'none';
+        }
+    };
+
+    // 1. Validasi Nama Real-time (Sambil diketik)
+    inputName.addEventListener('input', (e) => {
+        const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0);
+        // Tampilkan error jika user sudah mengetik tapi belum sampai 4 kata
+        const hasError = words.length > 0 && words.length < 4;
+        toggleErrorUI(e.target, errName, hasError, `Nama harus minimal 4 kata (baru ${words.length} kata)`);
+    });
+
+    // 2. Validasi Nomor HP Real-time (Sambil diketik & Cegah Huruf)
+    inputPhone.addEventListener('input', (e) => {
+        let val = e.target.value;
+        const phoneRegex = /^[0-9]*$/;
+
+        // Mencegah dan menghapus langsung jika ada karakter selain angka (Anti-Text)
+        if (!phoneRegex.test(val)) {
+            val = val.replace(/[^0-9]/g, '');
+            e.target.value = val;
+            toggleErrorUI(e.target, errPhone, true, 'Nomor HP hanya boleh diisi angka murni.');
+        } else {
+            toggleErrorUI(e.target, errPhone, false, '');
+        }
+    });
+
+    // 3. Validasi Alamat Real-time (Sambil diketik)
+    inputAddr.addEventListener('input', (e) => {
+        const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0);
+        const hasError = words.length > 0 && words.length < 12;
+        toggleErrorUI(e.target, errAddr, hasError, `Alamat kurang detail, harus minimal 12 kata (baru ${words.length} kata)`);
+    });
+
+
+    // ==========================================
+    // HANDLE FORM SUBMISSION (FINAL CHECK)
+    // ==========================================
     formElement.addEventListener('submit', (e) => {
         e.preventDefault(); // Cegah reload halaman
 
-        // Ambil Data Form
-        const customerInfo = {
-            name: document.getElementById('receiverName').value.trim(),
-            phone: document.getElementById('receiverPhone').value.trim(),
-            address: document.getElementById('receiverAddress').value.trim(),
-            notes: document.getElementById('orderNotes').value.trim()
-        };
+        const nameVal = inputName.value.trim();
+        const phoneVal = inputPhone.value.trim();
+        const addressVal = inputAddr.value.trim();
+        const notesVal = document.getElementById('orderNotes').value.trim();
         const paymentMethod = document.getElementById('paymentMethod').value;
 
+        const nameWords = nameVal.split(/\s+/).filter(word => word.length > 0);
+        const addressWords = addressVal.split(/\s+/).filter(word => word.length > 0);
+
+        // Final Barrier: Jika lolos ketikan, tetap dicek saat klik tombol
+        if (nameWords.length < 4 || !/^[0-9]+$/.test(phoneVal) || addressWords.length < 12) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Belum Lengkap',
+                text: 'Mohon periksa kembali kolom berwarna merah. Data pengiriman belum memenuhi syarat.',
+                confirmButtonColor: '#14213D'
+            });
+            // Triggers UI Error Color manually if empty
+            if (nameWords.length < 4) toggleErrorUI(inputName, errName, true, 'Nama harus minimal 4 kata');
+            if (!/^[0-9]+$/.test(phoneVal)) toggleErrorUI(inputPhone, errPhone, true, 'Nomor wajib diisi angka');
+            if (addressWords.length < 12) toggleErrorUI(inputAddr, errAddr, true, 'Alamat harus minimal 12 kata');
+            return;
+        }
+
+        const customerInfo = {
+            name: nameVal,
+            phone: phoneVal,
+            address: addressVal,
+            notes: notesVal
+        };
+
+        // Generator Invoice
         const dateObj = new Date();
         const dateStr = dateObj.toISOString().slice(0, 10).replace(/-/g, '');
         const randomChar = Math.random().toString(36).substring(2, 6).toUpperCase();
         const invoiceNumber = `INV-${dateStr}-${randomChar}`;
 
+        // Konstruksi Pesanan
         const newOrder = {
             id_order: Date.now().toString(),
             invoice: invoiceNumber,
@@ -113,7 +211,7 @@ const initCheckoutSystem = (user, formElement) => {
             customer_info: customerInfo,
             payment_method: paymentMethod,
             items: userCart,
-            total_price: calculatedGrandTotal,
+            total_price: finalGrandTotal,
             status: 'Menunggu',
             date: dateObj.toLocaleString('id-ID')
         };
@@ -122,26 +220,23 @@ const initCheckoutSystem = (user, formElement) => {
         orders.push(newOrder);
         localStorage.setItem('orders', JSON.stringify(orders));
 
-        // REVISI: Logika Pengurangan Stok pada Produk
+        // Kurangi Stok Asli di Database Produk
         let productsDB = JSON.parse(localStorage.getItem('products')) || [];
         userCart.forEach(cartItem => {
             const productIndex = productsDB.findIndex(p => p.id === cartItem.product_id);
             if (productIndex > -1) {
-                // Kurangi stok sebesar kuantitas yang di checkout
                 productsDB[productIndex].stock -= cartItem.quantity;
-                // Pengamanan fallback jika terjadi kesalahan matematika yang membuatnya minus
-                if (productsDB[productIndex].stock < 0) {
-                    productsDB[productIndex].stock = 0;
-                }
+                if (productsDB[productIndex].stock < 0) productsDB[productIndex].stock = 0;
             }
         });
         localStorage.setItem('products', JSON.stringify(productsDB));
 
-        // Bersihkan data cart eksklusif untuk user aktif
+        // Bersihkan Keranjang & Promo
         const remainingCarts = carts.filter(item => item.user_id !== user.id);
         localStorage.setItem('cart', JSON.stringify(remainingCarts));
+        localStorage.removeItem('activePromo');
 
-        // Notifikasi Sukses & Redirect
+        // Sukses Redirect
         Swal.fire({
             icon: 'success',
             title: 'Pesanan Berhasil Dibuat!',
@@ -154,17 +249,15 @@ const initCheckoutSystem = (user, formElement) => {
 };
 
 // ==========================================================
-// MODUL RIWAYAT PESANAN (REVISED: SECURE XSS-FREE DOM RENDERING)
+// MODUL RIWAYAT PESANAN
 // ==========================================================
 
 const initOrderHistorySystem = (user, containerElement) => {
     const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
     const userOrders = allOrders.filter(order => order.user_id === user.id);
 
-    // Sorting Descending (Pesanan terbaru di atas)
     userOrders.sort((a, b) => Number(b.id_order) - Number(a.id_order));
-
-    containerElement.textContent = ''; // Pembersihan DOM mutlak sebelum render
+    containerElement.textContent = '';
 
     if (userOrders.length === 0) {
         const emptyMsg = document.createElement('div');
@@ -181,7 +274,6 @@ const initOrderHistorySystem = (user, containerElement) => {
         const card = document.createElement('div');
         card.className = 'history-card';
 
-        // 1. Header (Invoice & Date)
         const header = document.createElement('div');
         header.className = 'history-header';
 
@@ -200,11 +292,9 @@ const initOrderHistorySystem = (user, containerElement) => {
 
         header.append(invoiceWrap, statusBadge);
 
-        // 2. Body Preview Items (REVISED: Pure DOM Node Factory, Anti-XSS)
         const bodyPreview = document.createElement('div');
         bodyPreview.className = 'history-items-preview';
 
-        // Render maksimal 2 produk pertama secara aman menggunakan textContent
         order.items.forEach((item, idx) => {
             if (idx < 2) {
                 const itemRow = document.createElement('div');
@@ -214,7 +304,6 @@ const initOrderHistorySystem = (user, containerElement) => {
             }
         });
 
-        // Tambahkan indikator sisa produk jika item di dalam invoice > 2
         if (order.items.length > 2) {
             const moreItemsText = document.createElement('em');
             moreItemsText.style.display = 'block';
@@ -224,7 +313,6 @@ const initOrderHistorySystem = (user, containerElement) => {
             bodyPreview.appendChild(moreItemsText);
         }
 
-        // 3. Footer (Payment Method & Grand Total)
         const footer = document.createElement('div');
         footer.className = 'history-footer';
 
@@ -239,7 +327,6 @@ const initOrderHistorySystem = (user, containerElement) => {
 
         footer.append(payMethod, grandTotal);
 
-        // Assemble Component
         card.append(header, bodyPreview, footer);
         containerElement.appendChild(card);
     });

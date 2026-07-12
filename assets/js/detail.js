@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. TAMPILAN NAVBAR
-    document.getElementById('userGreeting').textContent = `Halo, ${currentUser.name}`;
+    const greetingEl = document.getElementById('userGreeting');
+    if (greetingEl) greetingEl.textContent = `Halo, ${currentUser.name}`;
+
     updateCartBadge(currentUser.id);
     setupLogout();
     setupHamburgerMenu();
@@ -144,7 +146,12 @@ function setupActionBox(product, user) {
             confirmButtonText: 'Lanjut Belanja',
             cancelButtonText: 'Lihat Keranjang'
         }).then((result) => {
-            if (!result.isConfirmed) {
+            // PERBAIKAN BUG LOGIKA REDIRECT
+            if (result.isConfirmed) {
+                // Jika klik "Lanjut Belanja" (Confirm)
+                window.location.href = 'dashboard.html';
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Jika klik "Lihat Keranjang" (Cancel)
                 window.location.href = 'cart.html';
             }
         });

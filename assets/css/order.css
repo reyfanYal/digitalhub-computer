@@ -49,6 +49,7 @@
     background-color: #f5f5f7;
     transition: all 0.3s ease;
     outline: none;
+    box-sizing: border-box;
 }
 
 .order-textarea {
@@ -70,6 +71,21 @@
     font-weight: 600;
     color: #14213D;
     margin-bottom: 8px;
+}
+
+/* REVISI: Real-time Error Validation Styles */
+.input-error {
+    border-color: #d90429 !important;
+    background-color: #fff0f0 !important;
+    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1) !important;
+}
+
+.error-text {
+    display: none;
+    color: #d90429;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 6px;
 }
 
 /* Order Summary (Struk/Receipt Style) */
@@ -229,7 +245,6 @@
     color: #127d32;
 }
 
-/* Responsiveness */
 @media (max-width: 992px) {
     .checkout-layout {
         grid-template-columns: 1fr;

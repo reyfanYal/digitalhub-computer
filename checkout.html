@@ -26,7 +26,7 @@
     <main class="dashboard-container">
         <h1 style="margin-bottom: 24px; color: #14213D;">Checkout Pesanan</h1>
 
-        <form id="checkoutForm" class="checkout-layout">
+        <form id="checkoutForm" class="checkout-layout" novalidate>
 
             <div class="checkout-card">
                 <h2 class="checkout-section-title">Informasi Pengiriman</h2>
@@ -34,17 +34,20 @@
                 <div class="form-grid">
                     <div>
                         <label class="input-label" for="receiverName">Nama Penerima</label>
-                        <input type="text" id="receiverName" class="order-input" placeholder="Masukkan nama lengkap"
-                            required>
+                        <input type="text" id="receiverName" class="order-input" placeholder="Minimal 4 kata" required>
+                        <span id="nameError" class="error-text"></span>
                     </div>
                     <div>
                         <label class="input-label" for="receiverPhone">Nomor HP</label>
                         <input type="tel" id="receiverPhone" class="order-input" placeholder="0812xxxxxxx" required>
+                        <span id="phoneError" class="error-text"></span>
                     </div>
                     <div class="form-group-full">
                         <label class="input-label" for="receiverAddress">Alamat Lengkap</label>
                         <textarea id="receiverAddress" class="order-textarea"
-                            placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" required></textarea>
+                            placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos (Min. 12 Kata)"
+                            required></textarea>
+                        <span id="addressError" class="error-text"></span>
                     </div>
                     <div class="form-group-full">
                         <label class="input-label" for="orderNotes">Catatan Pesanan (Opsional)</label>
@@ -74,6 +77,10 @@
                     <div class="summary-row">
                         <span>Total Harga Barang</span>
                         <span id="checkoutSubtotal">Rp 0</span>
+                    </div>
+                    <div class="summary-row" id="checkoutDiscountRow" style="display: none; color: #d90429;">
+                        <span>Diskon Promo (10%)</span>
+                        <span id="checkoutDiscountAmount">- Rp 0</span>
                     </div>
                     <div class="summary-row">
                         <span>Biaya Pengiriman</span>
