@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Dashboard User</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+</head>
+
+<body class="dashboard-layout">
+
+    <nav class="dashboard-nav">
+        <a href="dashboard.html" class="nav-brand">DigitalHub.</a>
+
+        <button class="hamburger-toggle" id="menuToggleBtn" aria-label="Buka Menu">☰</button>
+
+        <div class="nav-menu-container" id="navMenuContainer">
+            <span class="greeting-text" id="userGreeting">Halo, User</span>
+
+            <ul class="nav-list">
+                <li><a href="dashboard.html" class="nav-link">Home</a></li>
+                <li><a href="riwayat.html" class="nav-link">Riwayat Pesanan</a></li>
+                <li>
+                    <a href="cart.html" class="cart-btn" aria-label="Keranjang Belanja">
+                        🛒
+                        <span class="cart-badge" id="cartBadgeCount">0</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button class="filter-btn logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+
+        <section class="bento-header">
+            <div class="bento-banner">
+                <h2>Upgrade Ekosistem Kerjamu</h2>
+                <p>Temukan komponen premium untuk kebutuhan produktivitas dan gaming kelas atas.</p>
+            </div>
+            <div class="bento-promo">
+                <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Promo Eksklusif</h3>
+                <p>Gunakan kode <strong>HUB2026</strong> untuk diskon 10%.</p>
+            </div>
+        </section>
+
+        <section class="tools-bar">
+            <input type="text" id="searchInput" class="search-input"
+                placeholder="Cari produk (misal: Workstation, RTX 4080)...">
+            <div class="category-filters" id="categoryFilters">
+                <button class="filter-btn active" data-category="Semua">Semua</button>
+                <button class="filter-btn" data-category="Workstations">Workstations</button>
+                <button class="filter-btn" data-category="Ultimate Gaming">Gaming</button>
+                <button class="filter-btn" data-category="Accessories">Accessories</button>
+                <button class="filter-btn" data-category="Components">Components</button>
+            </div>
+        </section>
+
+        <section class="product-grid" id="productGrid">
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/user.js"></script>
+</body>
+
+</html>

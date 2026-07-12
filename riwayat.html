@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Riwayat Pesanan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/order.css">
+</head>
+
+<body class="dashboard-layout">
+
+    <nav class="dashboard-nav">
+        <a href="dashboard.html" class="nav-brand">DigitalHub.</a>
+        <div class="nav-user-controls">
+            <a href="dashboard.html" class="filter-btn">Kembali ke Toko</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h1 style="color: #14213D;">Riwayat Pesanan Anda</h1>
+        </div>
+
+        <div id="historyContainer" class="history-grid">
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/order.js"></script>
+</body>
+
+</html>

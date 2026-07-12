@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Checkout Pesanan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/order.css">
+</head>
+
+<body class="dashboard-layout">
+
+    <nav class="dashboard-nav">
+        <a href="dashboard.html" class="nav-brand">DigitalHub.</a>
+        <div class="nav-user-controls">
+            <a href="cart.html" class="filter-btn">Kembali ke Keranjang</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1 style="margin-bottom: 24px; color: #14213D;">Checkout Pesanan</h1>
+
+        <form id="checkoutForm" class="checkout-layout">
+
+            <div class="checkout-card">
+                <h2 class="checkout-section-title">Informasi Pengiriman</h2>
+
+                <div class="form-grid">
+                    <div>
+                        <label class="input-label" for="receiverName">Nama Penerima</label>
+                        <input type="text" id="receiverName" class="order-input" placeholder="Masukkan nama lengkap"
+                            required>
+                    </div>
+                    <div>
+                        <label class="input-label" for="receiverPhone">Nomor HP</label>
+                        <input type="tel" id="receiverPhone" class="order-input" placeholder="0812xxxxxxx" required>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="input-label" for="receiverAddress">Alamat Lengkap</label>
+                        <textarea id="receiverAddress" class="order-textarea"
+                            placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" required></textarea>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="input-label" for="orderNotes">Catatan Pesanan (Opsional)</label>
+                        <input type="text" id="orderNotes" class="order-input"
+                            placeholder="Contoh: Titip di pos satpam">
+                    </div>
+                </div>
+
+                <h2 class="checkout-section-title" style="margin-top: 32px;">Metode Pembayaran</h2>
+                <div class="form-group-full">
+                    <select id="paymentMethod" class="order-select" required>
+                        <option value="" disabled selected>Pilih metode pembayaran (Dummy)</option>
+                        <option value="Transfer Bank">Transfer Bank / Virtual Account</option>
+                        <option value="QRIS">QRIS Instan</option>
+                        <option value="COD">Cash on Delivery (Bayar di Tempat)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="checkout-card">
+                <h2 class="checkout-section-title">Ringkasan Belanja</h2>
+
+                <div id="checkoutItemsList" class="summary-item-list">
+                </div>
+
+                <div class="cart-summary" style="padding: 0; box-shadow: none;">
+                    <div class="summary-row">
+                        <span>Total Harga Barang</span>
+                        <span id="checkoutSubtotal">Rp 0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Biaya Pengiriman</span>
+                        <span style="color: #FCA311; font-weight: 700;">Gratis</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Grand Total</span>
+                        <span id="checkoutGrandTotal">Rp 0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="checkout-action-btn">Selesaikan Pesanan</button>
+            </div>
+
+        </form>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/order.js"></script>
+</body>
+
+</html>

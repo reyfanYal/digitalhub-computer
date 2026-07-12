@@ -1,0 +1,451 @@
+/* ==========================================================================
+   DIGITALHUB - DASHBOARD & CART CSS (Apple Style & Bento Grid)
+   ========================================================================== */
+
+/* Layout & Navbar */
+body.dashboard-layout {
+    background-color: #f5f5f7;
+    padding-top: 80px;
+    font-family: 'Open Sans', sans-serif;
+    color: #1d1d1f;
+}
+
+.dashboard-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.nav-brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #14213D;
+    text-decoration: none;
+}
+
+/* REVISI: Kontainer Menu Utama (Desktop Mode Default) */
+.nav-menu-container {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-list {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #1d1d1f;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #FCA311;
+}
+
+.greeting-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #14213D;
+}
+
+.cart-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #14213D;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.cart-btn:hover {
+    transform: scale(1.1);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background-color: #FCA311;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 12px;
+}
+
+/* Tombol Hamburger - Sembunyikan di Desktop */
+.hamburger-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #14213D;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.hamburger-toggle:active {
+    transform: scale(0.9);
+}
+
+/* Bento Grid Dashboard Layout */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.bento-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.bento-banner {
+    background: linear-gradient(135deg, #14213D, #2a3d66);
+    border-radius: 16px;
+    padding: 40px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bento-banner h2 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.bento-promo {
+    background-color: #FCA311;
+    border-radius: 16px;
+    padding: 40px;
+    color: #14213D;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Search & Filters */
+.tools-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px 20px;
+    border: 1px solid #d2d2d7;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #14213D;
+    box-shadow: 0 0 0 3px rgba(20, 33, 61, 0.1);
+}
+
+.category-filters {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-btn {
+    padding: 10px 16px;
+    border: 1px solid #d2d2d7;
+    background: transparent;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #1d1d1f;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #14213D;
+    color: white;
+    border-color: #14213D;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.product-category {
+    font-size: 0.8rem;
+    color: #FCA311;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.product-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 8px 0;
+    color: #14213D;
+}
+
+.product-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1d1d1f;
+}
+
+.add-to-cart-btn {
+    margin-top: auto;
+    padding: 12px;
+    background: #14213D;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background: #2a3d66;
+}
+
+.add-to-cart-btn:disabled {
+    background: #e5e5ea;
+    color: #86868b;
+    cursor: not-allowed;
+}
+
+/* Cart Page Specifics */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+}
+
+.cart-items-container {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 80px 2fr 1fr 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-title {
+    font-weight: 700;
+    color: #14213D;
+}
+
+.cart-qty-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.cart-item-subtotal {
+    font-weight: 700;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ff3b30;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.btn-remove:hover {
+    color: #c92a20;
+}
+
+.cart-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    height: fit-content;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.summary-total {
+    border-top: 1px solid #e5e5ea;
+    padding-top: 16px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #14213D;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 16px;
+    background: #FCA311;
+    color: #14213D;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    margin-top: 24px;
+}
+
+.checkout-btn:hover {
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   RESPONSIVENESS (MOBILE & TABLET OVERRIDES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .dashboard-nav {
+        padding: 0 20px;
+    }
+
+    .hamburger-toggle {
+        display: block;
+        /* Munculkan hamburger di mobile */
+    }
+
+    /* Modifikasi Menu untuk Dropdown Overlay Mobile */
+    .nav-menu-container {
+        position: absolute;
+        top: 72px;
+        /* Tepat di bawah navbar */
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 24px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+
+        /* Efek tersembunyi halus by default */
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Saat class 'show' ditambahkan melalui JS */
+    .nav-menu-container.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        width: 100%;
+        gap: 16px;
+        text-align: center;
+        margin: 16px 0;
+    }
+
+    .logout-btn {
+        width: 100%;
+    }
+
+    .cart-btn {
+        justify-content: center;
+    }
+
+    /* Layout Komponen Lainnya di Mobile */
+    .bento-header,
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+    }
+}

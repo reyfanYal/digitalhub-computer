@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Keranjang Belanja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+</head>
+
+<body class="dashboard-layout">
+
+    <nav class="dashboard-nav">
+        <a href="dashboard.html" class="nav-brand">DigitalHub.</a>
+        <div class="nav-user-controls">
+            <a href="dashboard.html" class="filter-btn">Kembali ke Toko</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1 style="margin-bottom: 24px; color: #14213D;">Keranjang Belanja</h1>
+
+        <div class="cart-layout">
+            <div class="cart-items-container" id="cartContainer">
+            </div>
+
+            <div class="cart-summary">
+                <h2 style="margin-bottom: 24px; color: #14213D;">Ringkasan Pesanan</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="summarySubtotal">Rp 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Pajak & Layanan</span>
+                    <span style="color: #FCA311; font-weight: 700;">Gratis</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total Keseluruhan</span>
+                    <span id="summaryGrandTotal">Rp 0</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">Lanjutkan Pembayaran</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/user.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,309 @@
+/* ==========================================================================
+   DIGITALHUB - ADMIN SPECIFIC STYLES (Sidebar & CRUD Dashboard)
+   ========================================================================== */
+
+body.admin-layout {
+    background-color: #f5f5f7;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.admin-sidebar {
+    width: 260px;
+    background-color: #14213D;
+    color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.sidebar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.btn-logout-admin {
+    background-color: #ff3b30;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.btn-logout-admin:hover {
+    opacity: 0.9;
+}
+
+/* Main Workspace Content Area */
+.admin-content {
+    margin-left: 260px;
+    flex-grow: 1;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.admin-page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #14213D;
+    margin-bottom: 32px;
+}
+
+/* Statistics Bento Grid */
+.stats-bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.stats-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #86868b;
+    letter-spacing: 0.5px;
+}
+
+.stats-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #14213D;
+    margin-top: 8px;
+}
+
+/* Management Content Panel Card */
+.management-panel {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 40px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.panel-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #14213D;
+}
+
+/* Data Tables */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.admin-table th {
+    background-color: #f5f5f7;
+    color: #14213D;
+    font-weight: 700;
+    padding: 16px;
+    border-bottom: 2px solid #e5e5ea;
+}
+
+.admin-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e5e5ea;
+    color: #1d1d1f;
+    vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+    background-color: rgba(245, 245, 247, 0.5);
+}
+
+.table-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Action Trigger Elements */
+.action-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-edit { background-color: #d8eaff; color: #0056b3; }
+.btn-delete { background-color: #fff0f0; color: #ff3b30; }
+.action-btn:hover { opacity: 0.8; }
+
+.status-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #d2d2d7;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    outline: none;
+}
+
+/* Simple CSS Native Modal Box System */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-window {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.active .modal-window {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #86868b;
+}
+
+/* Form inputs inside modals */
+.modal-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.grid-span-all {
+    grid-column: 1 / -1;
+}
+
+.admin-form-input, .admin-form-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d2d2d7;
+    border-radius: 10px;
+    background-color: #f5f5f7;
+    outline: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+.admin-form-input:focus, .admin-form-textarea:focus {
+    border-color: #14213D;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(20, 33, 61, 0.1);
+}
+
+.admin-form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Screen Width Adjustment Rule */
+@media (max-width: 992px) {
+    .stats-bento-grid { grid-template-columns: 1fr; }
+    .admin-sidebar { width: 80px; padding: 24px 8px; align-items: center; }
+    .sidebar-brand, .sidebar-link span { display: none; }
+    .admin-content { margin-left: 80px; padding: 20px; }
+}

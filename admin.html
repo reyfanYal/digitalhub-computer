@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub | Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/order.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
+</head>
+
+<body class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <a href="admin.html" class="sidebar-brand">HubAdmin.</a>
+        <nav class="sidebar-menu">
+            <a href="#dashboard" class="sidebar-link active" id="menuDashLink"><span>Dashboard Stats</span></a>
+            <a href="#products-panel" class="sidebar-link" id="menuProdLink"><span>Manage Products</span></a>
+            <a href="#orders-panel" class="sidebar-link" id="menuOrderLink"><span>Manage Orders</span></a>
+        </nav>
+        <button class="btn-logout-admin" id="adminLogoutBtn">Sign Out</button>
+    </aside>
+
+    <main class="admin-content">
+        <h1 class="admin-page-title">Operational Workspace</h1>
+
+        <section class="stats-bento-grid">
+            <div class="stats-card">
+                <div class="stats-label">Total Curated Products</div>
+                <div class="stats-value" id="statTotalProducts">0</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">Total User Accounts</div>
+                <div class="stats-value" id="statTotalUsers">0</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">Processed Orders</div>
+                <div class="stats-value" id="statTotalOrders">0</div>
+            </div>
+        </section>
+
+        <section class="management-panel" id="productsManagementSection">
+            <div class="panel-header">
+                <h2 class="panel-title">Product Inventory Master</h2>
+                <button class="btn btn-primary" id="openAddModalBtn" style="padding: 10px 20px; border-radius: 10px;">+
+                    Add New Product</button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Details</th>
+                            <th>Category</th>
+                            <th>Price Unit</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="management-panel" id="ordersManagementSection">
+            <div class="panel-header">
+                <h2 class="panel-title">Customer Order Queue</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Date Timestamp</th>
+                            <th>Customer Details</th>
+                            <th>Total Amount</th>
+                            <th>Status Badge</th>
+                            <th>Transition Control</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="custom-modal-overlay" id="productModalOverlay">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 class="panel-title" id="modalTemplateTitle">Add Product Configuration</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="productForm" novalidate>
+                <input type="hidden" id="formProductId">
+
+                <div class="modal-form-grid">
+                    <div class="grid-span-all">
+                        <label class="input-label" for="formProdName">System / Hardware Title Name</label>
+                        <input type="text" id="formProdName" class="admin-form-input" required>
+                    </div>
+                    <div>
+                        <label class="input-label" for="formProdBrand">Brand Manufacturer</label>
+                        <input type="text" id="formProdBrand" class="admin-form-input" required>
+                    </div>
+                    <div>
+                        <label class="input-label" for="formProdCategory">Category Ecosystem</label>
+                        <select id="formProdCategory" class="admin-form-input" style="height: 41px;" required>
+                            <option value="Workstations">Workstations</option>
+                            <option value="Ultimate Gaming">Ultimate Gaming</option>
+                            <option value="Components">Components</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="input-label" for="formProdPrice">Unit Price (IDR)</label>
+                        <input type="number" id="formProdPrice" class="admin-form-input" min="0" required>
+                    </div>
+                    <div>
+                        <label class="input-label" for="formProdStock">Initial Inventory Stock</label>
+                        <input type="number" id="formProdStock" class="admin-form-input" min="0" required>
+                    </div>
+                    <div class="grid-span-all">
+                        <label class="input-label" for="formProdImage">External Image Static URL</label>
+                        <input type="url" id="formProdImage" class="admin-form-input"
+                            placeholder="https://images.unsplash.com/..." required>
+                    </div>
+                    <div class="grid-span-all">
+                        <label class="input-label" for="formProdDesc">Technical Specification Overview</label>
+                        <textarea id="formProdDesc" class="admin-form-textarea" required></textarea>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" id="cancelFormBtn"
+                        style="border-radius: 8px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveFormSubmitBtn"
+                        style="border-radius: 8px;">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/admin.js"></script>
+</body>
+
+</html>

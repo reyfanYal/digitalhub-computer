@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalHub Computer | Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/auth.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">DigitalHub.</a>
+            <nav class="nav-menu">
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#products" class="nav-link">Featured Products</a>
+                <a href="#" class="nav-link nav-promo">Special Promo</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-secondary" id="authBtn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title">Experience the Next Level of Computing</h1>
+            <p class="hero-subtitle">Premium curated hardware for professionals, creators, and hardcore gamers.</p>
+            <a href="#products" class="btn btn-primary">Explore Products</a>
+        </div>
+    </section>
+
+    <section class="section-container" id="categories">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="bento-grid-categories">
+            <div class="bento-card bento-card-large category-card bg-dark">
+                <h3 class="category-title text-white">Ultimate Gaming</h3>
+                <p class="category-desc text-muted">High-FPS rigs and cutting-edge GPUs.</p>
+            </div>
+            <div class="bento-card category-card bg-light">
+                <h3 class="category-title text-dark">Workstations</h3>
+                <p class="category-desc text-dark-muted">Power for creators.</p>
+            </div>
+            <div class="bento-card category-card bg-orange">
+                <h3 class="category-title text-white">Accessories</h3>
+                <p class="category-desc text-white-muted">Premium peripherals.</p>
+            </div>
+            <div class="bento-card bento-card-wide category-card bg-light">
+                <h3 class="category-title text-dark">Components</h3>
+                <p class="category-desc text-dark-muted">Build your dream PC setup.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" id="products">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="bento-grid-products" id="featuredProductsContainer">
+            <p>Loading premium products...</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 DigitalHub Computer. Built with premium Vanilla Tech.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/data.js"></script>
+</body>
+
+</html>

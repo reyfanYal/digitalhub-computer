@@ -1,0 +1,243 @@
+/* ==========================================================================
+   DIGITALHUB - ORDER & CHECKOUT CSS (Apple Style & Bento Grid)
+   ========================================================================== */
+
+/* Layout Checkout (2 Kolom) */
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+.checkout-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.checkout-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #14213D;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+/* Form Styles */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.order-input,
+.order-select,
+.order-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d2d2d7;
+    border-radius: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.95rem;
+    background-color: #f5f5f7;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.order-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.order-input:focus,
+.order-select:focus,
+.order-textarea:focus {
+    border-color: #14213D;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(20, 33, 61, 0.1);
+}
+
+.input-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #14213D;
+    margin-bottom: 8px;
+}
+
+/* Order Summary (Struk/Receipt Style) */
+.summary-item-list {
+    margin-bottom: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.summary-item-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed #e5e5ea;
+}
+
+.summary-item-row:last-child {
+    border-bottom: none;
+}
+
+.summary-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.summary-info-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #14213D;
+}
+
+.summary-info-qty {
+    font-size: 0.85rem;
+    color: #86868b;
+    margin-top: 4px;
+}
+
+.summary-price {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.checkout-action-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: #14213D;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 16px;
+}
+
+.checkout-action-btn:hover {
+    background-color: #2a3d66;
+}
+
+/* Riwayat Pesanan (Order History Grid) */
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+}
+
+.history-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.history-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+.invoice-text {
+    font-weight: 800;
+    color: #14213D;
+    font-size: 1.1rem;
+}
+
+.history-date {
+    font-size: 0.85rem;
+    color: #86868b;
+}
+
+.history-items-preview {
+    font-size: 0.9rem;
+    color: #1d1d1f;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.history-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #e5e5ea;
+}
+
+.history-total-price {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #14213D;
+}
+
+/* Dynamic Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.badge-menunggu {
+    background-color: #fff4d5;
+    color: #b07d00;
+}
+
+.badge-diproses {
+    background-color: #d8eaff;
+    color: #0056b3;
+}
+
+.badge-dikirim {
+    background-color: #eadbff;
+    color: #5a22b5;
+}
+
+.badge-selesai {
+    background-color: #d1f3db;
+    color: #127d32;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
