@@ -106,7 +106,7 @@ const initCheckoutSystem = (user, formElement) => {
 
 
     // ==========================================
-    // REVISI: REAL-TIME INLINE VALIDATION
+    // REAL-TIME INLINE VALIDATION
     // ==========================================
     const inputName = document.getElementById('receiverName');
     const errName = document.getElementById('nameError');
@@ -129,20 +129,18 @@ const initCheckoutSystem = (user, formElement) => {
         }
     };
 
-    // 1. Validasi Nama Real-time (Sambil diketik)
+    // 1. Validasi Nama Real-time (Minimal 1 kata / Tidak boleh kosong)
     inputName.addEventListener('input', (e) => {
         const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0);
-        // Tampilkan error jika user sudah mengetik tapi belum sampai 4 kata
-        const hasError = words.length > 0 && words.length < 4;
-        toggleErrorUI(e.target, errName, hasError, `Nama harus minimal 4 kata (baru ${words.length} kata)`);
+        const hasError = words.length === 0;
+        toggleErrorUI(e.target, errName, hasError, `Nama penerima wajib diisi.`);
     });
 
-    // 2. Validasi Nomor HP Real-time (Sambil diketik & Cegah Huruf)
+    // 2. Validasi Nomor HP Real-time (Hanya boleh angka)
     inputPhone.addEventListener('input', (e) => {
         let val = e.target.value;
         const phoneRegex = /^[0-9]*$/;
 
-        // Mencegah dan menghapus langsung jika ada karakter selain angka (Anti-Text)
         if (!phoneRegex.test(val)) {
             val = val.replace(/[^0-9]/g, '');
             e.target.value = val;
@@ -152,16 +150,16 @@ const initCheckoutSystem = (user, formElement) => {
         }
     });
 
-    // 3. Validasi Alamat Real-time (Sambil diketik)
+    // 3. Validasi Alamat Real-time (Minimal 4 kata)
     inputAddr.addEventListener('input', (e) => {
         const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0);
-        const hasError = words.length > 0 && words.length < 12;
-        toggleErrorUI(e.target, errAddr, hasError, `Alamat kurang detail, harus minimal 12 kata (baru ${words.length} kata)`);
+        const hasError = words.length > 0 && words.length < 4;
+        toggleErrorUI(e.target, errAddr, hasError, `Alamat kurang detail, harus minimal 4 kata (baru ${words.length} kata)`);
     });
 
 
     // ==========================================
-    // HANDLE FORM SUBMISSION (FINAL CHECK)
+    // HANDLE FORM SUBMISSION & PAYMENT GATEWAY SIMULATION
     // ==========================================
     formElement.addEventListener('submit', (e) => {
         e.preventDefault(); // Cegah reload halaman
@@ -175,27 +173,20 @@ const initCheckoutSystem = (user, formElement) => {
         const nameWords = nameVal.split(/\s+/).filter(word => word.length > 0);
         const addressWords = addressVal.split(/\s+/).filter(word => word.length > 0);
 
-        // Final Barrier: Jika lolos ketikan, tetap dicek saat klik tombol
-        if (nameWords.length < 4 || !/^[0-9]+$/.test(phoneVal) || addressWords.length < 12) {
+        // Evaluasi Final Barrier pencocokan kondisi batas minimal
+        if (nameWords.length < 1 || !/^[0-9]+$/.test(phoneVal) || addressWords.length < 4) {
             Swal.fire({
                 icon: 'error',
                 title: 'Data Belum Lengkap',
                 text: 'Mohon periksa kembali kolom berwarna merah. Data pengiriman belum memenuhi syarat.',
                 confirmButtonColor: '#14213D'
             });
-            // Triggers UI Error Color manually if empty
-            if (nameWords.length < 4) toggleErrorUI(inputName, errName, true, 'Nama harus minimal 4 kata');
-            if (!/^[0-9]+$/.test(phoneVal)) toggleErrorUI(inputPhone, errPhone, true, 'Nomor wajib diisi angka');
-            if (addressWords.length < 12) toggleErrorUI(inputAddr, errAddr, true, 'Alamat harus minimal 12 kata');
+
+            if (nameWords.length < 1) toggleErrorUI(inputName, errName, true, 'Nama penerima wajib diisi.');
+            if (!/^[0-9]+$/.test(phoneVal)) toggleErrorUI(inputPhone, errPhone, true, 'Nomor HP wajib diisi angka murni.');
+            if (addressWords.length < 4) toggleErrorUI(inputAddr, errAddr, true, 'Alamat harus minimal 4 kata.');
             return;
         }
-
-        const customerInfo = {
-            name: nameVal,
-            phone: phoneVal,
-            address: addressVal,
-            notes: notesVal
-        };
 
         // Generator Invoice
         const dateObj = new Date();
@@ -203,48 +194,125 @@ const initCheckoutSystem = (user, formElement) => {
         const randomChar = Math.random().toString(36).substring(2, 6).toUpperCase();
         const invoiceNumber = `INV-${dateStr}-${randomChar}`;
 
-        // Konstruksi Pesanan
-        const newOrder = {
-            id_order: Date.now().toString(),
-            invoice: invoiceNumber,
-            user_id: user.id,
-            customer_info: customerInfo,
-            payment_method: paymentMethod,
-            items: userCart,
-            total_price: finalGrandTotal,
-            status: 'Menunggu',
-            date: dateObj.toLocaleString('id-ID')
+        // FUNGSI INTI: Eksekusi Penyimpanan Pesanan
+        const executeOrderProcessing = () => {
+            const customerInfo = {
+                name: nameVal,
+                phone: phoneVal,
+                address: addressVal,
+                notes: notesVal
+            };
+
+            const newOrder = {
+                id_order: Date.now().toString(),
+                invoice: invoiceNumber,
+                user_id: user.id,
+                customer_info: customerInfo,
+                payment_method: paymentMethod,
+                items: userCart,
+                total_price: finalGrandTotal,
+                status: 'Menunggu',
+                date: dateObj.toLocaleString('id-ID')
+            };
+
+            // Simpan ke database order
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Kurangi Stok Asli di Database Produk
+            let productsDB = JSON.parse(localStorage.getItem('products')) || [];
+            userCart.forEach(cartItem => {
+                const productIndex = productsDB.findIndex(p => p.id === cartItem.product_id);
+                if (productIndex > -1) {
+                    productsDB[productIndex].stock -= cartItem.quantity;
+                    if (productsDB[productIndex].stock < 0) productsDB[productIndex].stock = 0;
+                }
+            });
+            localStorage.setItem('products', JSON.stringify(productsDB));
+
+            // Bersihkan Keranjang & Promo
+            const remainingCarts = carts.filter(item => item.user_id !== user.id);
+            localStorage.setItem('cart', JSON.stringify(remainingCarts));
+            localStorage.removeItem('activePromo');
+
+            // Sukses Redirect
+            Swal.fire({
+                icon: 'success',
+                title: 'Pesanan Berhasil Dibuat!',
+                text: `Nomor Invoice Anda: ${invoiceNumber}`,
+                confirmButtonColor: '#14213D'
+            }).then(() => {
+                window.location.href = 'riwayat.html';
+            });
         };
 
-        const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        orders.push(newOrder);
-        localStorage.setItem('orders', JSON.stringify(orders));
+        // ==========================================
+        // PAYMENT POPUP LOGIC
+        // ==========================================
+        if (paymentMethod === 'QRIS') {
+            // Simulasi QRIS menggunakan API pembuat QR Dummy
+            Swal.fire({
+                title: 'Pembayaran QRIS',
+                text: 'Silakan scan QR Code di bawah ini menggunakan aplikasi e-Wallet atau M-Banking Anda.',
+                imageUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=DigitalHub-QRIS-Dummy-Payment',
+                imageWidth: 250,
+                imageHeight: 250,
+                imageAlt: 'QR Code QRIS',
+                confirmButtonText: 'Saya Sudah Bayar',
+                confirmButtonColor: '#14213D',
+                showCancelButton: true,
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    executeOrderProcessing();
+                }
+            });
+        }
+        else if (paymentMethod === 'Transfer Bank') {
+            // Simulasi Rekening Bank BRI
+            Swal.fire({
+                title: 'Transfer Bank BRI',
+                html: `
+                    <p>Silakan transfer tepat sebesar <strong style="color: #FCA311;">${formatCurrencyIDR(finalGrandTotal)}</strong> ke rekening berikut:</p>
+                    <div style="background-color: #f5f5f7; padding: 20px; border-radius: 12px; margin: 16px 0; border: 1px solid #e5e5ea;">
+                        <h3 style="margin: 0; color: #14213D; font-size: 1.1rem;">Bank BRI</h3>
+                        <p style="font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; margin: 8px 0; color: #1d1d1f;">0123-4567-8910-111</p>
+                        <p style="margin: 0; color: #86868b; font-weight: 600;">a.n. DigitalHub Computer</p>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #86868b;">Pesanan akan otomatis diproses setelah pembayaran terverifikasi.</p>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Saya Sudah Transfer',
+                confirmButtonColor: '#14213D',
+                showCancelButton: true,
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    executeOrderProcessing();
+                }
+            });
+        }
+        else {
+            // Simulasi COD
+            Swal.fire({
+                title: 'Konfirmasi COD',
+                text: 'Anda memilih Cash on Delivery. Harap siapkan uang tunai saat kurir tiba di alamat Anda.',
+                icon: 'question',
+                confirmButtonText: 'Buat Pesanan',
+                confirmButtonColor: '#14213D',
+                showCancelButton: true,
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    executeOrderProcessing();
+                }
+            });
+        }
 
-        // Kurangi Stok Asli di Database Produk
-        let productsDB = JSON.parse(localStorage.getItem('products')) || [];
-        userCart.forEach(cartItem => {
-            const productIndex = productsDB.findIndex(p => p.id === cartItem.product_id);
-            if (productIndex > -1) {
-                productsDB[productIndex].stock -= cartItem.quantity;
-                if (productsDB[productIndex].stock < 0) productsDB[productIndex].stock = 0;
-            }
-        });
-        localStorage.setItem('products', JSON.stringify(productsDB));
-
-        // Bersihkan Keranjang & Promo
-        const remainingCarts = carts.filter(item => item.user_id !== user.id);
-        localStorage.setItem('cart', JSON.stringify(remainingCarts));
-        localStorage.removeItem('activePromo');
-
-        // Sukses Redirect
-        Swal.fire({
-            icon: 'success',
-            title: 'Pesanan Berhasil Dibuat!',
-            text: `Nomor Invoice Anda: ${invoiceNumber}`,
-            confirmButtonColor: '#14213D'
-        }).then(() => {
-            window.location.href = 'riwayat.html';
-        });
     });
 };
 
