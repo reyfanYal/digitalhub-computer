@@ -1,6 +1,6 @@
 /**
  * DigitalHub Computer - Authentication Engine (ES6+)
- * Revised with SweetAlert2 integration
+ * Revised with SweetAlert2 integration & Brute-Force Protection
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -47,6 +47,29 @@ function initializeUsersDatabase() {
 function handleLogin(e) {
     e.preventDefault();
 
+    // ==========================================
+    // PENGECEKAN STATUS BLOKIR (RATE LIMITING)
+    // ==========================================
+    const lockoutTime = localStorage.getItem('lockoutTime');
+    if (lockoutTime) {
+        const currentTime = Date.now();
+        // Jika waktu sekarang masih kurang dari batas waktu blokir
+        if (currentTime < parseInt(lockoutTime)) {
+            const remainingSeconds = Math.ceil((parseInt(lockoutTime) - currentTime) / 1000);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Akses Diblokir Sementara',
+                text: `Terlalu banyak percobaan gagal. Silakan coba lagi dalam ${remainingSeconds} detik.`,
+                confirmButtonColor: '#FCA311'
+            });
+            return; // Hentikan eksekusi login
+        } else {
+            // Jika waktu blokir sudah habis, bersihkan status blokir
+            localStorage.removeItem('lockoutTime');
+            localStorage.removeItem('loginAttempts');
+        }
+    }
+
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
 
@@ -73,15 +96,43 @@ function handleLogin(e) {
     );
 
     if (!matchedUser) {
-        // SweetAlert2 Error Notification
-        Swal.fire({
-            icon: 'error',
-            title: 'Login Gagal',
-            text: 'Email atau password yang Anda masukkan salah!',
-            confirmButtonColor: '#14213D'
-        });
+        // ==========================================
+        // LOGIKA PENAMBAHAN PERCOBAAN GAGAL
+        // ==========================================
+        let attempts = parseInt(localStorage.getItem('loginAttempts')) || 0;
+        attempts++;
+
+        if (attempts >= 3) {
+            // Jika gagal 3 kali, set waktu blokir 1 menit (60.000 ms) dari sekarang
+            localStorage.setItem('lockoutTime', Date.now() + 60000);
+            localStorage.setItem('loginAttempts', 0); // Reset hitungan
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Diblokir',
+                text: 'Anda telah salah memasukkan sandi 3 kali. Demi keamanan, silakan tunggu 1 menit untuk mencoba lagi.',
+                confirmButtonColor: '#d90429' // Merah bahaya
+            });
+        } else {
+            // Jika belum 3 kali, simpan hitungan dan beri peringatan
+            localStorage.setItem('loginAttempts', attempts);
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Gagal',
+                text: `Email atau password salah! (Percobaan gagal: ${attempts}/3)`,
+                confirmButtonColor: '#14213D'
+            });
+        }
         return;
     }
+
+    // ==========================================
+    // LOGIKA LOGIN SUKSES
+    // ==========================================
+
+    // Bersihkan riwayat kegagalan jika login berhasil
+    localStorage.removeItem('loginAttempts');
+    localStorage.removeItem('lockoutTime');
 
     const sessionData = {
         id: matchedUser.id,
